@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog 001 | ATtiny85 USB HID</title>
+    <script src="css.js"></script>
+    <style>
+        :root {
+            transition: --color-primary 0.5s ease, --color-primary-dim 0.5s ease, --color-accent 0.5s ease;
+            --bg-base: #0F0F10;       
+            --bg-panel: #18181B;      
+            --color-primary: #7C3AED;      
+            --color-primary-dim: #2E1065;  
+            --color-accent: #E9D5FF;       
+            --text-main: #FFFFFF;
+            --text-muted: #A1A1AA;    
+        }
+        *, *::before, *::after {
+            transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease, fill 0.5s ease;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+        
+        .spin-once { animation: spin 0.5s ease-in-out; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: 'var(--bg-base)',
+                        panel: 'var(--bg-panel)',
+                        primary: 'var(--color-primary)',     
+                        primaryDim: 'var(--color-primary-dim)',
+                        accent: 'var(--color-accent)',     
+                    },
+                    fontFamily: { mono: ['Courier New', 'monospace'], sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <script src="icon.js"></script>
+</head>
+<body class="bg-base text-white min-h-screen font-sans selection:bg-primary selection:text-white">
+
+    <div class="fixed top-0 left-0 w-full h-[70vh] bg-primary opacity-[0.05] blur-[150px] pointer-events-none"></div>
+
+    <header class="fixed top-0 left-0 right-0 z-40 bg-base/90 backdrop-blur-md border-b border-white/5 h-16 md:h-20 flex items-center">
+        <div class="max-w-4xl mx-auto w-full px-4 md:px-8 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 group text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                <span class="font-mono text-xs tracking-widest">CLOSE_LOG</span>
+            </a>
+
+            <div class="flex items-center gap-4">
+                <button onclick="cycleTheme()" id="theme-btn" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-panel border border-white/10 hover:border-primary/50 text-accent transition-all group">
+                    <i data-lucide="palette" class="w-4 h-4 group-hover:rotate-12 transition-transform"></i>
+                    <span id="theme-name" class="hidden md:block font-mono text-[10px] tracking-widest uppercase">THEME</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 pt-32 pb-24">
+        
+        <div class="mb-12 border-l-4 border-primary pl-6">
+            <div class="flex items-center gap-3 text-primary mb-2 font-mono text-xs tracking-widest">
+                <span>Blog: 01</span>
+                <span>//</span>
+                <span>ATtiny85 USB HID</span>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black leading-tight mb-4">ATtiny Payload Core: Resource-Optimized Attack Framework</h1>
+            <div class="flex items-center gap-6 text-sm text-gray-500 font-mono">
+                <span class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4"></i> 20 MIN READ</span>
+                <span class="flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4"></i> 09-01-2026</span>
+            </div>
+        </div>
+
+        <div class="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-a:no-underline hover:prose-a:text-accent prose-code:text-accent prose-code:bg-primaryDim/30 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:before:content-none prose-code:after:content-none">
+            <p class="lead text-xl text-gray-300">
+                This project explores how a highly constrained microcontroller behaves when interacting with a host system over USB HID. The focus was not on payload delivery, but on understanding how memory limits, USB behavior, and system defenses influence what is realistically possible on minimal hardware.
+            </p>
+            <br />
+            <p>
+                Rather than aiming for reliability or completeness, the experiment was designed to observe failure modes, unexpected behavior, and trade-offs that emerge when theoretical examples are applied to real, resource-limited devices.
+            </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-code" class="text-primary"></i> Why I Built This
+                    </h2>
+
+                    <p>I built this experiment to move beyond simplified examples commonly found online and test what actually breaks when constraints are real. Many demonstrations assume ideal conditions, abundant memory, or abstract away system defenses entirely.
+                        <br /><br />
+                        I wanted to understand where those assumptions fail — specifically, how far a small microcontroller like the ATtiny85 can go before limitations in memory, USB handling, or system behavior force design compromises or complete rethinking.
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-x-corner" class="text-primary"></i> Constraints & Assumptions
+                    </h2>
+                    <p>1. Extremely limited flash and RAM availability <br /><br />
+
+                        2. No external storage or secondary controller.<br /><br />
+
+                        3. USB interaction limited to basic HID behavior.<br /><br />
+
+                        4. Host system protections left enabled during testing.<br /><br />
+
+                        5. Focus on behavior observation, not persistence or automation.
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-cog" class="text-primary"></i> High-Level Approach
+                    </h2>
+                    <p>The experiment centered around observing how the device interacts with the host system through basic USB HID communication. Instead of treating the microcontroller as a delivery mechanism, I treated it as a probe — a way to understand how constrained devices are interpreted and handled by the host.
+                            <br /><br />
+                        The design was iterated multiple times to reduce memory usage and simplify logic, allowing the core interaction to function without overwhelming the device’s limits.
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-exclamation-point" class="text-primary"></i> What Broke / Didn’t Work
+                    </h2>
+                    <p>Memory constraints were the primary limiting factor. Common approaches that work in theory failed in practice due to RAM exhaustion, incomplete execution, or unstable behavior. Even minor increases in logic complexity led to crashes or inconsistent results.
+                        <br /><br />
+                        This exposed a gap between examples that appear simple on paper and what constrained hardware can reliably support.
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-pen-line" class="text-primary"></i> Adjustments & Decisions
+                    </h2>
+                    <p>After repeated failures, I shifted focus away from standard patterns and explored more memory-aware alternatives. This required deeper understanding of how the device handles data internally, rather than relying on familiar abstractions.
+                        <br /><br />
+                        Simplifying interactions and reducing assumptions about available resources proved more effective than adding features or complexity.  
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-user" class="text-primary"></i> Key Takeaways
+                    </h2>
+                    <p>This project reinforced a pattern I keep encountering: partial understanding doesn’t hold up under real constraints. Either the system is deeply understood, or every available resource must be used intentionally to compensate.
+                        <br /><br />
+                        Working in the middle — with surface-level knowledge and limited resources — almost always fails.
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+            <div class="bg-panel border border-white/10 rounded-xl p-6 my-8 font-mono text-sm overflow-x-auto shadow-2xl">
+                <div class="flex gap-2 mb-4 border-b border-white/5 pb-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                </div>
+                <pre><code class="language-javascript"><span class="text-gray-500">// Personal Note</span>
+                <span class="text-primary"> → </span> <span class="text-accent">Either have complete knowledge or complete resources<span class="text-primary"> — </span></span>
+                <span class="text-accent">staying in between leads to failure.</span>
+            </code></pre>
+            </div>
+        </div>
+
+        <div class="mt-20 pt-12 border-t border-white/10">
+            <p class="font-mono text-xs text-gray-500 mb-4 tracking-widest">Project Article</p>
+            <a href="project.html" class="group block bg-panel border border-white/5 p-6 rounded-xl hover:border-primary/50 transition-colors">
+                <h3 class="text-xl font-bold mb-2 group-hover:text-accent transition-colors">ATtiny85 USB</h3>
+                <p class="text-gray-400 text-sm">Digispark BadUSB: Resource-Optimized Attack Framework</p>
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-white/5 py-8 text-center text-gray-500 text-xs font-mono">
+        <p>LOG_ID: 010126 // END OF BLOG</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Theme Definitions
+        const themes = [
+            { name: 'VIOLET', colors: { '--color-primary': '#7C3AED', '--color-primary-dim': '#2E1065', '--color-accent': '#E9D5FF' } },
+            { name: 'BURGUNDY', colors: { '--color-primary': '#E11D48', '--color-primary-dim': '#6D001A', '--color-accent': '#FFFFFF' } },
+            { name: 'VIBE', colors: { '--color-primary': '#AC58E9', '--color-primary-dim': '#5B21B6', '--color-accent': '#FFFFFF' } },
+            { name: 'BEIGE', colors: { '--color-primary': '#AD7D56', '--color-primary-dim': '#451a03', '--color-accent': '#CDB49E' } }
+        ];
+
+        let currentThemeIndex = 0;
+
+        function loadTheme() {
+            const savedIndex = localStorage.getItem('portfolioThemeIndex');
+            if (savedIndex !== null) {
+                currentThemeIndex = parseInt(savedIndex);
+                applyTheme(themes[currentThemeIndex]);
+            }
+        }
+
+        function applyTheme(theme) {
+            const root = document.documentElement;
+            for (const [property, value] of Object.entries(theme.colors)) {
+                root.style.setProperty(property, value);
+            }
+            const themeNameEl = document.getElementById('theme-name');
+            if(themeNameEl) themeNameEl.innerText = theme.name;
+        }
+
+        function cycleTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            localStorage.setItem('portfolioThemeIndex', currentThemeIndex); // Save to storage
+            applyTheme(themes[currentThemeIndex]);
+            
+            const icon = document.querySelector('#theme-btn i');
+            if(icon) {
+                icon.classList.remove('spin-once');
+                void icon.offsetWidth;
+                icon.classList.add('spin-once');
+            }
+        }
+
+        // Initialize on load
+        loadTheme();
+    </script>
+</body>
+</html>
