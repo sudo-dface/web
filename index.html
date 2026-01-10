@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dface | Ethical Hacker</title>
+    
+    <script src="css.js"></script>
+    
+    <style>
+        :root {
+            /* Transition settings for smooth theme swapping */
+            transition: --color-primary 0.5s ease, --color-primary-dim 0.5s ease, --color-accent 0.5s ease;
+            
+            /* Initial Theme: Violet (Spheris AI) - Will be overwritten by JS if storage exists */
+            --bg-base: #0F0F10;       
+            --bg-panel: #18181B;      
+            
+            --color-primary: #7C3AED;      /* Deep Purple */
+            --color-primary-dim: #2E1065;  /* Dark Purple */
+            --color-accent: #E9D5FF;       /* Lavender */
+            
+            --text-main: #FFFFFF;
+            --text-muted: #A1A1AA;    
+        }
+
+        /* Apply smooth transitions to actual properties */
+        *, *::before, *::after {
+            transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease, fill 0.5s ease;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+
+        /* Animations */
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scanline::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: scanline 2s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Tab Transitions */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Mobile Nav Glass Effect */
+        @media (max-width: 768px) {
+            .mobile-glass {
+                background: rgba(15, 15, 16, 0.9);
+                backdrop-filter: blur(16px);
+                border-top: 1px solid rgba(255,255,255,0.05);
+            }
+        }
+
+        /* Theme Button Spin Animation */
+        .spin-once {
+            animation: spin 0.5s ease-in-out;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: 'var(--bg-base)',
+                        panel: 'var(--bg-panel)',
+                        primary: 'var(--color-primary)',     
+                        primaryDim: 'var(--color-primary-dim)',
+                        accent: 'var(--color-accent)',     
+                        white: 'var(--text-main)',
+                        gray: {
+                            400: 'var(--text-muted)'
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['Courier New', 'Courier', 'monospace'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px var(--color-primary)', 
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script src="icon.js"></script>
+</head>
+<body class="bg-base text-white min-h-screen font-sans selection:bg-primary selection:text-white overflow-x-hidden pb-24 md:pb-0">
+
+    <div class="fixed top-0 left-0 w-full h-[70vh] bg-primary opacity-[0.08] blur-[150px] pointer-events-none transition-colors duration-500"></div>
+    <div class="fixed bottom-0 right-0 w-[50vh] h-[50vh] bg-accent opacity-[0.03] blur-[120px] pointer-events-none transition-colors duration-500"></div>
+
+    <header class="fixed top-0 left-0 right-0 z-40 bg-base/80 backdrop-blur-md border-b border-white/5 h-16 md:h-20 flex items-center">
+        <div class="max-w-6xl mx-auto w-full px-4 md:px-8 flex items-center justify-between">
+            <div class="font-black text-xl md:text-2xl tracking-tighter flex items-center gap-2 select-none">
+                <div class="w-3 h-3 bg-primary shadow-glow rounded-full transition-colors duration-500"></div>
+                KIND<span class="text-accent transition-colors duration-500">BOT</span>
+            </div>
+
+            <nav class="hidden md:flex items-center bg-panel rounded-full p-1 border border-white/5">
+                <button onclick="switchTab('portfolio')" id="btn-portfolio-d" class="nav-btn-d active px-6 py-2 text-xs font-mono tracking-widest text-gray-500 hover:text-accent transition-all flex items-center gap-2">
+                    <i data-lucide="cpu" class="w-4 h-4"></i> PROFILE
+                </button>
+                <button onclick="switchTab('projects')" id="btn-projects-d" class="nav-btn-d px-6 py-2 text-xs font-mono tracking-widest text-gray-500 hover:text-accent transition-all flex items-center gap-2">
+                    <i data-lucide="folder-git-2" class="w-4 h-4"></i> PROJECTS
+                </button>
+                <button onclick="switchTab('blog')" id="btn-blog-d" class="nav-btn-d px-6 py-2 text-xs font-mono tracking-widest text-gray-500 hover:text-accent transition-all flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-4 h-4"></i> BLOG
+                </button>
+                <button onclick="switchTab('about')" id="btn-about-d" class="nav-btn-d px-6 py-2 text-xs font-mono tracking-widest text-gray-500 hover:text-accent transition-all flex items-center gap-2">
+                    <i data-lucide="square-user" class="w-4 h-4"></i> About
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <button onclick="cycleTheme()" id="theme-btn" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-panel border border-white/10 hover:border-primary/50 text-accent transition-all group">
+                    <i data-lucide="palette" class="w-4 h-4 group-hover:rotate-12 transition-transform"></i>
+                    <span id="theme-name" class="hidden md:block font-mono text-[10px] tracking-widest uppercase">Violet</span>
+                </button>
+
+                <div class="hidden md:flex items-center gap-4 text-gray-400 border-l border-white/10 pl-4">
+                    <a href="#" class="hover:text-primary transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-primary transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-primary transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 md:px-8 pt-24 md:pt-32 relative min-h-screen">
+        
+        <div id="tab-portfolio" class="tab-content active space-y-12 md:space-y-20">
+            
+            <section class="flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-16">
+                <div class="relative group shrink-0 mx-auto md:mx-0">
+                    <div class="w-32 h-32 md:w-48 md:h-48 relative overflow-hidden border-2 border-panel rounded-full md:rounded-2xl group-hover:border-primary transition-colors duration-500 shadow-2xl shadow-black/50">
+                        <img src="profile1.jpg" 
+                             alt="Profile" 
+                             class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                        <div class="scanline"></div>
+                    </div>
+                    <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:-right-3 bg-base border border-primary/50 px-4 py-1 rounded-full text-accent font-mono text-xs font-bold tracking-widest shadow-glow transition-colors duration-500">
+                        @Aadil
+                    </div>
+                </div>
+
+                <div class="flex-1 text-center md:text-left">
+                    <div class="inline-block h-1 w-16 bg-gradient-to-r from-primary to-accent mb-6 rounded-full transition-all duration-500"></div>
+                    <h1 class="text-5xl md:text-8xl font-black tracking-tighter mb-4 leading-tight">
+                        D<span class="text-primary transition-colors duration-500">.</span>FACE
+                    </h1>
+                    <div class="grid grid-cols-[auto,1fr] gap-x-2 gap-y-4 justify-center md:justify-start text-accent/70 font-mono text-xs md:text-sm">
+                        <!-- Row 1 -->
+                         <i data-lucide="terminal"
+                            class="text-primary w-4 h-4 mt-[2px] transition-colors duration-500"></i>
+                        <p>
+                            I explore security, automation, OSINT, and hardware by building small experiments under real constraints.
+                        </p>
+
+                        <!-- Row 2 -->
+                        <i data-lucide="shield"
+                            class="text-primary w-4 h-4 mt-[2px] transition-colors duration-500"></i>
+                        <p>
+                            This site is my personal workspace for projects, experiments, and learnings.
+                        </p>
+                    </div>
+
+                    
+                    <div class="flex md:hidden justify-center gap-6 mt-8 text-neutral-500">
+                        <a href="#" class="hover:text-primary"><i data-lucide="github"></i></a>
+                        <a href="#" class="hover:text-primary"><i data-lucide="twitter"></i></a>
+                        <a href="#" class="hover:text-primary"><i data-lucide="instagram"></i></a>
+                    </div>
+                </div>
+            </section><br><br>
+            <section class="max-w-6xl mx-auto">
+                <h2 class="text-xl font-bold border-l-4 border-primary pl-4 flex items-center gap-2 text-white transition-colors duration-500 mb-8">
+                    WHAT I WORK ON
+                    <i data-lucide="shield-user" class="w-4 h-4 text-primary transition-colors duration-500"></i>
+                </h2>
+
+                <div class="grid sm:grid-cols-2 gap-6">
+                <!-- Box 1 -->
+                    <div class="bg-panel border border-white/5 p-6 rounded-xl hover:border-primary/30 transition-colors">
+                        <h3 class="font-bold text-accent mb-2">Offensive Security</h3>
+                        <p class="text-sm text-gray-400">Understanding how systems fail through hands-on testing and controlled exploitation.</p>
+                    </div>
+
+                <!-- Box 2 -->
+                    <div class="bg-panel border border-white/5 p-6 rounded-xl hover:border-primary/30 transition-colors">
+                        <h3 class="font-bold text-accent mb-2">Automation & Tooling</h3>
+                        <p class="text-sm text-gray-400">Building scripts and workflows to reduce manual effort and repetitive tasks.</p>
+                    </div>
+
+                <!-- Box 3 -->
+                    <div class="bg-panel border border-white/5 p-6 rounded-xl hover:border-primary/30 transition-colors">
+                        <h3 class="font-bold text-accent mb-2">Hardware & Low-level Experiments</h3>
+                        <p class="text-sm text-gray-400">Exploring constrained devices, USB behavior, and physical system limits.</p>
+                    </div>
+
+                <!-- Box 4 -->
+                    <div class="bg-panel border border-white/5 p-6 rounded-xl hover:border-primary/30 transition-colors">
+                        <h3 class="font-bold text-accent mb-2">Edge Cases & Behavior</h3>
+                        <p class="text-sm text-gray-400">Observing system behavior at edges, limits, and unintended paths.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="max-w-06xl mx-auto min-h-[50vh] grid grid-cols-1 pl-20 md:grid-cols-[1fr_1fr] gap-16 items-center">
+                <h2 class="text-xl font-bold border-l-4 border-primary pl-4 flex items-center gap-6 text-white transition-colors duration-500 mb-8">
+                        What I build is shaped by limits.
+                </h2>
+
+                <p class="text-sm text-gray-400 leading-relaxed border-l border-white/10 pl-6 -translate-y-4">
+                    I focus on real constraints like limited control, time, or hardware.
+                        <br /><br />
+                    I learnt finishing small experiments over chasing large unfinished ideas.
+                        <br /><br />
+                    I document what breaks and what changes my thinking.
+                </p>
+            </section>
+        </div>
+
+        <div id="tab-projects" class="tab-content">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-2 text-white">
+                <i data-lucide="folder-git-2" class="text-primary transition-colors duration-500"></i> DEPLOYMENTS
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <a href="project.html" class="block group h-64 bg-panel border border-white/5 rounded-xl p-6 flex flex-col justify-between hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex justify-between items-start relative z-10">
+                        <div class="p-2 bg-primaryDim text-accent rounded-lg border border-primary/20 transition-colors duration-500">
+                            <i data-lucide="usb" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-mono text-xs text-gray-400">Jan-2026</span>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-accent transition-colors duration-500">ATtiny Payload Core</h3>
+                        <p class="font-mono text-xs text-primary uppercase tracking-widest mb-4 transition-colors duration-500">Bad USB</p>
+                        <div class="flex gap-2">
+                             <span class="text-[10px] bg-base border border-white/10 px-2 py-1 rounded text-gray-400">C++</span>
+                             <span class="text-[10px] bg-base border border-white/10 px-2 py-1 rounded text-gray-400">Arduino</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#" class="block group h-64 bg-panel border border-white/5 rounded-xl p-6 flex flex-col justify-between hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex justify-between items-start relative z-10">
+                        <div class="p-2 bg-primaryDim text-accent rounded-lg border border-primary/20 transition-colors duration-500">
+                            <i data-lucide="clock" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-mono text-xs text-gray-400">Feb-2026</span>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-accent transition-colors duration-500">Morse Strip (Coming Soon)</h3>
+                        <p class="font-mono text-xs text-primary uppercase tracking-widest mb-4 transition-colors duration-500">Encrypted Communication</p>
+                        <div class="flex gap-2">
+                             <span class="text-[10px] bg-base border border-white/10 px-2 py-1 rounded text-gray-400">ESP32</span>
+                             <span class="text-[10px] bg-base border border-white/10 px-2 py-1 rounded text-gray-400">Leds</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div id="tab-blog" class="tab-content space-y-4">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-2 text-white">
+                <i data-lucide="file-text" class="text-primary transition-colors duration-500"></i> Blogs
+            </h2>
+            
+            <a href="blog.html" class="block border border-white/5 bg-panel rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between group hover:border-primary/50 transition-all cursor-pointer">
+                <div>
+                    <span class="font-mono text-primary text-xs mb-2 block transition-colors duration-500">BLOG_ENTRY: 01</span>
+                    <h3 class="text-lg md:text-2xl font-bold text-white group-hover:text-accent transition-colors duration-500">
+                        ATtiny Payload Core
+                    </h3>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <div class="w-10 h-10 rounded-full bg-base border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-500">
+                        <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="block border border-white/5 bg-panel rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between group hover:border-primary/50 transition-all cursor-pointer">
+                <div>
+                    <span class="font-mono text-primary text-xs mb-2 block transition-colors duration-500">BLOG_ENTRY: 02</span>
+                    <h3 class="text-lg md:text-2xl font-bold text-white group-hover:text-accent transition-colors duration-500">
+                        Morse Strip (Coming Soon)
+                    </h3>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <div class="w-10 h-10 rounded-full bg-base border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-500">
+                        <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div id="tab-about" class="tab-content space-y-16">
+
+<section class="relative max-w-6xl mx-auto min-h-screen py-24 md:py-32">
+
+<!-- vertical guide lines -->
+
+<!-- Mobile: 3 columns -->
+<div class="absolute inset-0 grid grid-cols-3 pointer-events-none opacity-15 md:hidden">
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+</div>
+
+<!-- Tablet: 6 columns -->
+<div class="absolute inset-0 hidden md:grid lg:hidden grid-cols-6 pointer-events-none opacity-20">
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+</div>
+
+<!-- Desktop: 12 columns -->
+<div class="absolute inset-0 hidden lg:grid grid-cols-12 pointer-events-none opacity-25">
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+  <div class="border-l border-white/10"></div>
+</div>
+
+  <!-- content grid -->
+  <div class="relative grid grid-cols-1 md:grid-cols-12 gap-y-20 md:gap-y-28">
+
+    <!-- Identity -->
+    <p class="md:col-start-2 md:col-span-4 text-gray-200 leading-none">
+      <span class="text-3xl">I</span><span class="text-3xl font-semibold text-primary transition-colors duration-500">’</span><span class="text-3xl -mr-1">m </span><span class="text-5xl md:text-7xl font-semibold tracking-tight text-primary transition-colors duration-500">
+        Aadil
+      </span>
+    </p>
+
+    <!-- Curiosity -->
+    <p class="md:col-start-7 md:col-span-5 text-sm text-gray-400 leading-relaxed max-w-[55ch]">
+      I work around security, automation, OSINT, and hardware, driven mainly by curiosity about how systems behave under real-world constraints. I tend to learn by building small things, breaking them, and paying attention to what fails, rather than following predefined paths or structured curricula.
+    </p>
+
+    <!-- Academic background -->
+    <p class="md:col-start-3 md:col-span-6 text-sm text-gray-400 leading-relaxed max-w-[60ch]">
+      My academic background is in humanities — a choice I made primarily to keep flexibility and time for independent exploration. While my education on paper isn’t technical, most of my learning has happened outside formal coursework through hands-on experimentation, self-directed projects, and continuous iteration.
+    </p>
+
+    <!-- Constraints (anchor paragraph) -->
+    <p class="md:col-start-4 md:col-span-6 text-lg text-gray-300 leading-relaxed max-w-[65ch]">
+      I’m particularly drawn to working under constraints: limited memory, limited hardware, limited time. These limits often force deeper understanding and more intentional design choices. Instead of chasing large, unfinished ideas, I prefer finishing small experiments and reflecting on what worked, what didn’t, and why my assumptions were wrong.
+    </p>
+
+    <!-- Purpose -->
+    <p class="md:col-start-7 md:col-span-5 text-sm text-gray-400 leading-relaxed max-w-[55ch]">
+      This site exists as a personal workspace and archive. It’s a place to document finished projects, ongoing experiments, and notes that capture changes in my thinking. It’s not meant to be a tutorial platform or a résumé, but a record of how my understanding evolves through practical work.
+    </p>
+
+    <!-- Closing -->
+    <p class="md:col-start-2 md:col-span-6 text-sm text-gray-400 leading-relaxed max-w-[60ch]">
+      I’m continuing to explore both software and hardware paths, refining my approach as I go. Over time, this space will grow as a reflection of that process — shaped by what I build, what breaks, and what I learn from it.
+    </p>
+
+  </div>
+  <!-- Social panel (large screens only) -->
+<div class="hidden lg:block absolute top-1/3 -translate-y-1/3 right-0">
+
+  <div class="grid grid-cols-1 gap-4 w-50">
+
+    <!-- GitHub -->
+    <a href="https://github.com/Dface1221" class="group flex items-center gap-4 bg-panel border border-white/10 rounded-xl px-4 py-3
+                       hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="github" class="w-5 h-5 text-primary group-hover:text-gray-400 transition-colors"></i>
+      <span class="text-sm text-gray-300 group-hover:text-white transition-colors">
+        GitHub
+      </span>
+    </a>
+
+    <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/in/aadil-92b269333" class="group flex items-center gap-4 bg-panel border border-white/10 rounded-xl px-4 py-3
+                       hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="linkedin" class="w-5 h-5 text-primary group-hover:text-gray-400 transition-colors"></i>
+      <span class="text-sm text-gray-300 group-hover:text-white transition-colors">
+        LinkedIn
+      </span>
+    </a>
+
+    <!-- Twitter / X -->
+    <a href="https://x.com/D_face_1221" class="group flex items-center gap-4 bg-panel border border-white/10 rounded-xl px-4 py-3
+                       hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="twitter" class="w-5 h-5 text-primary group-hover:text-gray-400 transition-colors"></i>
+      <span class="text-sm text-gray-300 group-hover:text-white transition-colors">
+        Twitter / X
+      </span>
+    </a>
+
+    <!-- Email -->
+    <a href="mailto:aadilfire46@gmail.com" class="group flex items-center gap-4 bg-panel border border-white/10 rounded-xl px-4 py-3
+                       hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="mail" class="w-5 h-5 text-primary group-hover:text-gray-400 transition-colors"></i>
+      <span class="text-sm text-gray-300 group-hover:text-white transition-colors">
+        Email
+      </span>
+    </a>
+
+    <!-- Telegram -->
+         <a href="https://t.me/Bot_1221" class="group flex items-center gap-4 bg-panel border border-white/10 rounded-xl px-4 py-3
+                       hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="send" class="w-5 h-5 text-primary group-hover:text-gray-400 transition-colors"></i>
+      <span class="text-sm text-gray-300 group-hover:text-white transition-colors">
+        Telegram
+      </span>
+    </a>
+
+    <!-- Youtube -->
+    <a href="https://www.youtube.com/@sudo_dlt" class="group flex items-center gap-4 bg-panel border border-white/10 rounded-xl px-4 py-3
+                       hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="youtube" class="w-5 h-5 text-primary group-hover:text-gray-400 transition-colors"></i>
+      <span class="text-sm text-gray-300 group-hover:text-white transition-colors">
+        Youtube
+      </span>
+    </a>
+
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/d_face_aadil" class="group flex items-center gap-4 bg-panel border border-white/10 rounded-xl px-4 py-3
+                       hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="instagram" class="w-5 h-5 text-primary group-hover:text-gray-400 transition-colors"></i>
+      <span class="text-sm text-gray-300 group-hover:text-white transition-colors">
+        Instagram
+      </span>
+    </a>
+
+  </div>
+
+</div>
+<!-- Social panel — TABLET (icons only) -->
+<div class="hidden md:block lg:hidden absolute top-1/3 -translate-y-1/3 right-4">
+
+  <div class="flex flex-col gap-4">
+
+    <a href="https://github.com/Dface1221"
+       class="group w-12 h-12 flex items-center justify-center
+              bg-panel border border-white/10 rounded-xl
+              hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="github"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors duration-500">
+      </i>
+    </a>
+
+    <a href="https://www.linkedin.com/in/aadil-92b269333"
+       class="group w-12 h-12 flex items-center justify-center
+              bg-panel border border-white/10 rounded-xl
+              hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="linkedin"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors duration-500">
+      </i>
+    </a>
+
+    <a href="https://x.com/D_face_1221"
+       class="group w-12 h-12 flex items-center justify-center
+              bg-panel border border-white/10 rounded-xl
+              hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="twitter"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors duration-500">
+      </i>
+    </a>
+
+    <a href="mailto:aadilfire46@gmail.com"
+       class="group w-12 h-12 flex items-center justify-center
+              bg-panel border border-white/10 rounded-xl
+              hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="mail"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors duration-500">
+      </i>
+    </a>
+
+    <a href="https://t.me/Bot_1221"
+       class="group w-12 h-12 flex items-center justify-center
+              bg-panel border border-white/10 rounded-xl
+              hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="send"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors duration-500">
+      </i>
+    </a>
+
+    <a href="https://www.youtube.com/@sudo_dlt"
+       class="group w-12 h-12 flex items-center justify-center
+              bg-panel border border-white/10 rounded-xl
+              hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="youtube"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors duration-500">
+      </i>
+    </a>
+
+    <a href="https://www.instagram.com/d_face_aadil"
+       class="group w-12 h-12 flex items-center justify-center
+              bg-panel border border-white/10 rounded-xl
+              hover:border-primary/40 transition-colors duration-300">
+      <i data-lucide="instagram"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors duration-500">
+      </i>
+    </a>
+
+  </div>
+</div>
+<!-- Social bar — MOBILE -->
+<div class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
+
+  <div class="flex items-center gap-3
+              bg-panel/90 backdrop-blur
+              border border-white/10 rounded-2xl
+              px-4 py-3">
+
+    <a href="https://github.com/Dface1221"
+       class="group w-10 h-10 flex items-center justify-center rounded-xl
+              hover:bg-white/5 transition">
+      <i data-lucide="github"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors">
+      </i>
+    </a>
+
+    <a href="https://www.linkedin.com/in/aadil-92b269333"
+       class="group w-10 h-10 flex items-center justify-center rounded-xl
+              hover:bg-white/5 transition">
+      <i data-lucide="linkedin"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors">
+      </i>
+    </a>
+
+    <a href="mailto:aadilfire46@gmail.com"
+       class="group w-10 h-10 flex items-center justify-center rounded-xl
+              hover:bg-white/5 transition">
+      <i data-lucide="mail"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors">
+      </i>
+    </a>
+
+    <a href="https://t.me/Bot_1221"
+       class="group w-10 h-10 flex items-center justify-center rounded-xl
+              hover:bg-white/5 transition">
+      <i data-lucide="send"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors">
+      </i>
+    </a>
+
+    <a href="https://www.instagram.com/d_face_aadil"
+       class="group w-10 h-10 flex items-center justify-center rounded-xl
+              hover:bg-white/5 transition">
+      <i data-lucide="instagram"
+         class="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors">
+      </i>
+    </a>
+
+  </div>
+</div>
+
+</section>
+
+
+
+
+        </div>
+
+
+    </main>
+
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 h-20 mobile-glass z-50 flex justify-around items-center px-2 pb-2">
+        <button onclick="switchTab('portfolio')" id="btn-portfolio-m" class="nav-btn-m active flex flex-col items-center gap-1 p-2 text-gray-500 w-full rounded-xl transition-colors">
+            <i data-lucide="cpu" class="w-5 h-5"></i>
+            <span class="text-[10px] font-mono tracking-widest">PROFILE</span>
+        </button>
+        <button onclick="switchTab('projects')" id="btn-projects-m" class="nav-btn-m flex flex-col items-center gap-1 p-2 text-gray-500 w-full rounded-xl transition-colors">
+            <i data-lucide="code" class="w-5 h-5"></i>
+            <span class="text-[10px] font-mono tracking-widest">PROJECTS</span>
+        </button>
+        <button onclick="switchTab('blog')" id="btn-blog-m" class="nav-btn-m flex flex-col items-center gap-1 p-2 text-gray-500 w-full rounded-xl transition-colors">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+            <span class="text-[10px] font-mono tracking-widest">INTEL</span>
+        </button>
+        <button onclick="switchTab('about')" id="btn-about-m" class="nav-btn-m flex flex-col items-center gap-1 p-2 text-gray-500 w-full rounded-xl transition-colors">
+            <i data-lucide="user" class="w-5 h-5"></i>
+            <span class="text-[10px] font-mono tracking-widest">ABOUT</span>
+        </button>
+
+    </nav>
+
+    <footer class="hidden md:block border-t border-white/5 py-8 mt-20 text-center text-gray-400 text-xs font-mono">
+        <p>© 2026 D_FACE // KIND_BOT</p>
+        <br />
+        <p>This site is a personal archive of things I build and learn. It’s not a résumé and not a tutorial site.</p>
+
+        <p>Any misuse of the information is solely the responsibility of the reader.</p>
+    </footer>
+
+    <script>
+        // 1. Initialize Icons
+        lucide.createIcons();
+
+        // 2. Tab Logic
+        function switchTab(tabName) {
+            // Hide contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            
+            // Show new content
+            const content = document.getElementById('tab-' + tabName);
+            if(content) content.classList.add('active');
+
+            // Update Desktop Buttons
+            document.querySelectorAll('.nav-btn-d').forEach(btn => {
+                btn.classList.remove('text-accent', 'bg-white/10');
+                btn.classList.add('text-gray-500');
+            });
+            const activeBtnD = document.getElementById('btn-' + tabName + '-d');
+            if(activeBtnD) {
+                activeBtnD.classList.remove('text-gray-500');
+                activeBtnD.classList.add('text-accent', 'bg-white/10');
+            }
+
+            // Update Mobile Buttons
+            document.querySelectorAll('.nav-btn-m').forEach(btn => {
+                btn.classList.remove('text-primary', 'bg-primaryDim/50');
+                btn.classList.add('text-gray-500');
+            });
+            const activeBtnM = document.getElementById('btn-' + tabName + '-m');
+            if(activeBtnM) {
+                activeBtnM.classList.remove('text-gray-500');
+                activeBtnM.classList.add('text-primary', 'bg-primaryDim/50');
+            }
+            
+            // Re-trigger icon scan
+            lucide.createIcons();
+            
+            // Scroll to top
+            window.scrollTo(0,0);
+        }
+
+        // 3. THEME ENGINE with Persistence
+        // Defined from your uploaded images
+        const themes = [
+            {
+                name: 'VIOLET',
+                colors: {
+                    '--color-primary': '#7C3AED',      // Deep Purple
+                    '--color-primary-dim': '#2E1065',  // Dark Purple
+                    '--color-accent': '#E9D5FF'        // Lavender
+                }
+            },
+            {
+                name: 'BURGUNDY',
+                colors: {
+                    '--color-primary': '#E11D48',      // Bright Rose/Red
+                    '--color-primary-dim': '#6D001A',  // Burgundy
+                    '--color-accent': '#FFFFFF'        // White
+                }
+            },
+            {
+                name: 'VIBE',
+                colors: {
+                    '--color-primary': '#AC58E9',      // Vibe Purple
+                    '--color-primary-dim': '#5B21B6',  // Deep Violet
+                    '--color-accent': '#FFFFFF'        // White
+                }
+            },
+            {
+                name: 'BEIGE',
+                colors: {
+                    '--color-primary': '#AD7D56',      // French Beige
+                    '--color-primary-dim': '#451a03',  // Dark Brown
+                    '--color-accent': '#CDB49E'        // Rodeo Dust
+                }
+            }
+        ];
+
+        let currentThemeIndex = 0;
+
+        // Load theme from storage
+        function loadTheme() {
+            const savedIndex = localStorage.getItem('portfolioThemeIndex');
+            if (savedIndex !== null) {
+                currentThemeIndex = parseInt(savedIndex);
+                const newTheme = themes[currentThemeIndex];
+                
+                // Apply theme immediately
+                const root = document.documentElement;
+                for (const [property, value] of Object.entries(newTheme.colors)) {
+                    root.style.setProperty(property, value);
+                }
+                document.getElementById('theme-name').innerText = newTheme.name;
+            }
+        }
+
+        function cycleTheme() {
+            // Calculate next index
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const newTheme = themes[currentThemeIndex];
+            
+            // Save to storage
+            localStorage.setItem('portfolioThemeIndex', currentThemeIndex);
+
+            // Apply variables to root
+            const root = document.documentElement;
+            for (const [property, value] of Object.entries(newTheme.colors)) {
+                root.style.setProperty(property, value);
+            }
+
+            // Update Button Text
+            const themeNameEl = document.getElementById('theme-name');
+            themeNameEl.innerText = newTheme.name;
+
+            // Trigger Icon Animation
+            const icon = document.querySelector('#theme-btn i');
+            icon.classList.remove('spin-once');
+            void icon.offsetWidth; // Trigger reflow to restart animation
+            icon.classList.add('spin-once');
+        }
+
+        // Run on load
+        loadTheme();
+    </script>
+</body>
+</html>
