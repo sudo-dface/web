@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>404 — Path Not Found</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+  <script src="/css.js"></script>
+</head>
+
+<body class="bg-black text-white min-h-screen flex items-center justify-center px-4">
+
+  <div id="main" class="max-w-md w-full text-center space-y-6">
+
+    <!-- Base 404 -->
+    <h1 class="text-4xl font-bold">404</h1>
+
+    <p class="text-gray-400 text-sm">
+      The page you’re looking for doesn’t exist.<br>
+      The path may be outdated or incorrect.
+    </p>
+
+    <!-- Home button -->
+    <button
+      onclick="goHome()"
+      class="px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors">
+      Go Home
+    </button>
+
+<!-- Progressive messages + challenge -->
+<div id="sequence" class="hidden pt-8 space-y-4 text-sm text-gray-400">
+
+  <p id="msg1" class="hidden">
+    Why are you waiting here?
+  </p>
+
+  <p id="msg2" class="hidden">
+    Are you finding something? or doing some reconnaissance?
+  </p>
+
+  <p id="msg3" class="hidden">
+    Lemme help you out.
+  </p>
+
+  <!-- Question -->
+  <div id="challenge" class="hidden space-y-4 pt-4">
+    <p class="text-gray-300">
+      What do you say when you ask for something?
+    </p>
+
+    <input
+      id="answer"
+      type="text"
+      class="w-full px-4 py-3 bg-panel border border-white/10 rounded-lg
+             text-gray-300 focus:outline-none focus:border-primary"
+      placeholder="Your answer"
+    />
+
+    <p id="error" class="text-xs text-red-400 hidden">
+        That’s not it.
+    </p>
+
+    <p id="finalError" class="text-xs text-gray-400 hidden">
+        Three attempts used. The answer wasn’t correct.
+    </p>
+
+  </div>
+
+</div>
+</div> <!-- CLOSE #main -->
+
+<!-- Reward section (hidden by default) -->
+<div
+  id="reward"
+  class="hidden min-h-screen flex items-center justify-center px-4"
+>
+  <div class="max-w-md w-full text-center space-y-6">
+
+    <p class="text-violet-400 font-mono text-sm tracking-widest">
+      ACCESS ACKNOWLEDGED
+    </p>
+
+    <p class="text-gray-400 text-sm leading-relaxed">
+      No privilege escalation is available here.<br>
+      This system is static by design.
+    </p>
+
+    <p class="text-gray-500 text-xs">
+        I value your knowledge and curiosity. However, there are no further
+        secrets to uncover on this path. Please return to the base.
+    </p>
+
+    <button
+      onclick="goHome()"
+      class="mt-6 px-6 py-3 bg-panel border border-white/10
+             rounded-lg hover:border-primary transition-colors"
+    >
+      Return to base
+    </button>
+
+  </div>
+</div>
+
+
+<script>
+  let attempts = 0;
+
+  const main = document.getElementById("main");
+  const reward = document.getElementById("reward");
+
+  const sequence = document.getElementById("sequence");
+  const msg1 = document.getElementById("msg1");
+  const msg2 = document.getElementById("msg2");
+  const msg3 = document.getElementById("msg3");
+  const challenge = document.getElementById("challenge");
+
+  const answer = document.getElementById("answer");
+  const error = document.getElementById("error");
+  const finalError = document.getElementById("finalError"); // NEW
+
+
+  function goHome() {
+    window.location.href = "/";
+  }
+
+  // Start sequence after 5s
+  setTimeout(() => {
+    sequence.classList.remove("hidden");
+    msg1.classList.remove("hidden");
+
+    setTimeout(() => {
+      msg2.classList.remove("hidden");
+
+      setTimeout(() => {
+        msg3.classList.remove("hidden");
+
+        setTimeout(() => {
+          challenge.classList.remove("hidden");
+          answer.focus();
+        }, 4000);
+
+      }, 4000);
+
+    }, 4000);
+
+  }, 6000);
+
+  // Handle answer
+  answer.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const value = answer.value.trim().toLowerCase();
+
+      if (value === "sudo") {
+        main.remove();
+        reward.classList.remove("hidden");
+      } else {
+        attempts++;
+        error.classList.remove("hidden");
+
+        if (attempts >= 3) {
+          // hide normal error, show final explanation
+          error.classList.add("hidden");
+          finalError.classList.remove("hidden");
+
+          // brief pause so user understands what happened
+          setTimeout(() => {
+            goHome();
+          }, 5000);
+        }
+      }
+    }
+  });
+</script>
+
+
+
+</body>
+</html>
