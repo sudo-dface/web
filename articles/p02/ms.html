@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lume-M | Detail View</title>
+    <script src="/css.js"></script>
+    <style>
+        :root {
+            transition: --color-primary 0.5s ease, --color-primary-dim 0.5s ease, --color-accent 0.5s ease;
+            --bg-base: #0F0F10;       
+            --bg-panel: #18181B;      
+            --color-primary: #7C3AED;      
+            --color-primary-dim: #2E1065;  
+            --color-accent: #E9D5FF;       
+            --text-main: #FFFFFF;
+            --text-muted: #A1A1AA;    
+        }
+        *, *::before, *::after {
+            transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease, fill 0.5s ease;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+        
+        .scanline::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255, 0.05), transparent);
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+        
+        .spin-once { animation: spin 0.5s ease-in-out; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: 'var(--bg-base)',
+                        panel: 'var(--bg-panel)',
+                        primary: 'var(--color-primary)',     
+                        primaryDim: 'var(--color-primary-dim)',
+                        accent: 'var(--color-accent)',     
+                    },
+                    fontFamily: { mono: ['Courier New', 'monospace'], sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <script src="/icon.js"></script>
+</head>
+<body class="bg-base text-white min-h-screen font-sans selection:bg-primary selection:text-white">
+
+    
+
+    <header class="fixed top-0 left-0 right-0 z-40 bg-base/90 backdrop-blur-md border-b border-white/5 h-16 md:h-20 flex items-center">
+        <div class="max-w-6xl mx-auto w-full px-4 md:px-8 flex items-center justify-between">
+            <a href="/index.html" class="flex items-center gap-2 group text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                <span class="font-mono text-xs tracking-widest">RETURN_TO_BASE</span>
+            </a>
+
+            <div class="flex items-center gap-4">
+                <button onclick="cycleTheme()" id="theme-btn" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-panel border border-white/10 hover:border-primary/50 text-accent transition-all group">
+                    <i data-lucide="palette" class="w-4 h-4 group-hover:rotate-12 transition-transform"></i>
+                    <span id="theme-name" class="hidden md:block font-mono text-[10px] tracking-widest uppercase">THEME</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 md:px-8 pt-24 md:pt-32 pb-20">
+        
+<div class="relative w-full min-h-[55vh] sm:min-h-[45vh] md:min-h-[60vh] rounded-2xl overflow-hidden border border-white/10 mb-12 group">
+
+  <!-- MEDIA LAYER (isolated blend context) -->
+  <div class="absolute inset-0 isolate z-10">
+
+    <!-- image -->
+    <img
+      src="banner.jpg"
+      class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+      alt="Project Cover"
+    />
+
+    <!-- color overlay -->
+    <div class="absolute inset-0 bg-primary/20 mix-blend-overlay"></div>
+
+    <!-- scanline -->
+    <div class="scanline absolute inset-0"></div>
+
+  </div>
+
+  <!-- CONTENT LAYER (no blending applied) -->
+  <div class="absolute inset-0 z-30 flex items-end">
+    <div class="w-full p-6 md:p-12 bg-gradient-to-t from-base via-base/80 to-transparent">
+
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="px-3 py-1 bg-primary text-white text-[10px] font-bold tracking-widest uppercase rounded">
+              Deployed VER 3.0.0
+            </span>
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-white mb-2">
+            Lume-M
+          </h1>
+
+          <!-- THIS WILL NOW RENDER CORRECTLY -->
+            <p class="text-1xl md:test-base font-black text-gray-400 mb-2">
+                A Robust Luma-Modulation Framework for High-Compression Video Channels
+            </p>
+        </div>
+
+        <div class="flex gap-3">
+          <a href="https://youtu.be/yLi2vRqrI8E?si=fVKbpM_fdej7hyo2"
+             class="px-6 py-3 bg-white text-base text-sm font-bold rounded-lg
+                    hover:bg-accent transition-colors flex items-center gap-2">
+            DEMO
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+
+          <a href="https://github.com/Dface1221/ATtiny-Payload-Core"
+             class="px-6 py-3 bg-panel border border-white/10 text-white text-sm font-bold rounded-lg
+                    hover:border-primary transition-colors flex items-center gap-2">
+            <i data-lucide="github" class="w-4 h-4"></i>
+            CODE
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+        <div class="grid md:grid-cols-3 gap-12">
+            
+            <div class="md:col-span-2 space-y-12">
+                <section>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="crosshair" class="text-primary"></i> OVERVIEW
+                    </h2>
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                        <p>
+                            This project explores the boundaries of Visible Light Communication (VLC) in non-ideal environments. While traditional Li-Fi requires specialized high-speed photodiodes and clear line-of-sight, this experiment focuses on Temporal Steganography: hiding data within a "breathing" LED pattern that looks like decorative lighting but remains readable even after extreme video compression (YouTube 120p).                        </p>
+                           <br /><br />
+                        <p>
+                            The goal was to create a communication method that is "medium-agnostic"—surviving the transition from physical light to a recorded digital file, and finally through the encoders and compressor of internet video codecs.
+                        </p>
+                    </div>
+                </section>
+                    <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                <section>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-box" class="text-primary"></i> Purpose
+                    </h2>
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                        <p>
+                            To document a robust optical data transmission system that utilizes macroscopic brightness modulation to bypass the limitations of frame-rate drops and lossy video compression.
+                        </p>
+                        <br>
+                        <p>
+                            Audience: Security researchers, IoT developers, Signal Processing enthusiasts, Creative Technologists.
+                        </p>
+                    </div>
+                </section>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                <section>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-text" class="text-primary"></i> Problem Statement : The "Compression Kill"
+                    </h2>
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                        <p>
+                            Traditional "hidden" data methods often fail in the real world:<br /><br />
+                        1. High-Frequency Light (Li-Fi): Cannot be captured by standard 30/60fps cameras.
+                        <br /><br />
+                        2. Pixel-Based Steganography: Video encoding (H.264/H.265) blurs pixel data, making minute changes unreadable.
+                        <br /><br />
+                        3. Audio Watermarking: Compression algorithms (like AAC) strip out "unnecessary" frequencies, destroying the data.
+                        <br /><br />
+                        <b>The Solution:</b> Modulate the Luminance (brightness) of a light source over time. If you can see the light in video, it can transfer the data.
+                        </p>
+
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        Transmission Constraints:
+                    </h2>
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                    <p>1. Frame Rate (FPS): If the LED flickers faster than the camera shutter, data is lost (Nyquist Aliasing).
+                        <br /><br />
+                    2. Compression (Codecs): YouTube/WhatsApp algorithms treat small, fast changes as "noise" and delete them.
+                        <br /><br />
+                    3. Physical Distance: Fast signals require expensive sensors; standard webcams can't keep up.
+                        </p>
+                    </div>
+                        <br>
+            <div class="bg-panel border border-white/10 rounded-xl p-4 sm:p-6 my-8 font-mono text-xs sm:text-sm overflow-x-auto shadow-2xl max-w-full">
+                <div class="flex gap-2 mb-4 border-b border-white/5 pb-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                </div>
+                <pre class="whitespace-pre-wrap break-words max-w-full overflow-x-auto">
+                <code class="language-javascript block min-w-full">
+                <span class="text-gray-500">// COMMON APPROACH (FAILS ON VIDEO)</span>
+                <span class="text-primary">void loop() &#123;</span>
+                <span class="text-primary">  digitalWrite(LED, HIGH); delay(1);</span>
+                <span class="text-primary">  digitalWrite(LED, LOW);  delay(1);</span>
+                <span class="text-gray-500">// RESULT: Camera aliasing + Video compression wipes the signal</span>
+                <span class="text-primary">&#125;</span> </code></pre>
+            </div>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+            <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        Failure Modes:
+            </h2>
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                    <p>Bit-Slip: Dropped video frames cause clock desync.
+                        <br /><br />
+                    Compression Artifacts: High-frequency data is smoothed out by H.264/H.265 logic.
+                        <br /><br />
+                    Visual Suspicion: Rapid flickering is distracting and "suspicious" to the human eye.
+                        </p>
+                    </div>
+
+                </div>
+
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-input" class="text-primary"></i> Solution: Sine-Wave Masking + Absolute State Logic
+                    </h2>
+            <div class="bg-panel border border-white/10 rounded-xl p-4 sm:p-6 my-8 font-mono text-xs sm:text-sm overflow-x-auto shadow-2xl max-w-full">
+
+                <div class="flex gap-2 mb-4 border-b border-white/5 pb-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                </div>
+                <pre class="whitespace-pre-wrap break-words max-w-full overflow-x-auto">
+                <code class="language-javascript block min-w-full">
+                <span class="text-gray-500">// OUR APPROACH (RESILIENT)</span>
+                <span class="text-primary">float wave = (sin(angle) + 1.0) / 2.0;  <span class="text-gray-500">// "Breathing" Carrier</span></span>
+                <span class="text-primary">if (reachedTarget) &#123;</span>
+                <span class="text-primary">pulseTarget = (s == '.') ? DOT_BOOST : DASH_BOOST;</span>
+                <span class="text-gray-500">// WAIT for physical brightness to reach target before moving to next bit</span>
+                <span class="text-primary">&#125;</span> </code></pre>
+            </div>
+
+            <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                <i data-lucide="file-pen-line" class="text-primary"></i> Key Design Decisions
+            </h2>
+
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                    <p>1. Data is encoded in the brightness intensity (Luma), which video codecs prioritize over color or fine detail.
+                        <br /><br />
+                    2. The encoder waits for the LED to physically reach its target brightness before advancing. If the video lags, the data just waits.
+                        <br /><br />
+                    3. The signal is "hidden" inside a 0.5Hz breathing effect, making it look like an aesthetic "Mood Light."
+                        <br /><br />
+                    4. The Python decoder calculates the median brightness of the entire video to auto-calibrate for room lighting.
+                        <br /><br />
+                        </p>
+                    </div>
+                    <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-terminal" class="text-primary"></i> Technologies & Implementation
+                    </h2>
+            <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        Hardware
+            </h2>
+
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                    <p>1. ESP8266 / ESP32
+                        <br /><br />
+                    2. WS2812B (FastLED)
+                        <br /><br />
+                    3. Any Camera (I used Phone camera)
+                        </p>
+                    </div>
+                        <br>
+            <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        Software
+            </h2>
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                    <p>1. FastLED Library: For precise 8-bit color/brightness control.
+                        <br /><br />
+                    2. OpenCV (Python): For frame-by-frame Luma analysis.
+                        <br /><br />
+                    3. NumPy: For signal smoothing and peak detection.
+                        </p>
+                    </div>
+                    <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+            <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                Project Capabilities
+            </h2>
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                    <p>1. Survives 144p: Tested via YouTube downscaling; data remained 100% recoverable.
+                        <br /><br />
+                    2. Visual Camouflage: Appears as a standard "Smart Home" ambient light to the naked eye
+                        <br /><br />
+                    3. Asynchronous Recovery: No shared clocks or cables required between the LED and the Camera.
+                        <br /><br />
+                    4. Luma-Boost Logic: Uses amplitude-based shifts to clearly distinguish Dots from Dashes.
+                        <br><br>
+                    5. Fully Customizable: User can add different breathing effect and can change the led color with small changes.
+                    </p>
+                    </div>
+
+                    <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+
+            <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                <i data-lucide="file-braces-corner" class="text-primary"></i>  Deployment & Testing
+            </h2>
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                        <p>
+                            Write your message in <span class="text-gray-500">String message = "HELLO WORLD";</span> in captial letters and upload the code on your ESP.
+                            <br><br>
+                            Physical Connection Guide
+                            <br>
+                            1. DI (Data In): Connect to GPIO 2 or 4 on your ESP.<br>
+                            2. GND: Connect to the GND pin on your ESP.<br>
+                            3. 5V / VCC: If you are only powering under 10 LEDs else have to power led externally.<br>
+                        </p>
+                    </div>
+            <div class="bg-panel border border-white/10 rounded-xl p-4 sm:p-6 my-8 font-mono text-xs sm:text-sm overflow-x-auto shadow-2xl max-w-full">
+                <div class="flex gap-2 mb-4 border-b border-white/5 pb-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                </div>
+                <pre class="whitespace-pre-wrap break-words max-w-full overflow-x-auto">
+                <code class="language-javascript block min-w-full">
+                <span class="text-gray-500"># Python Decoder Output</span>
+                <span class="text-primary">[+] Pulses found: 52</span></code></pre>
+                <span class="text-primary">Symbols: ......-...-..---.-----.-..-..-.....----....-..--.-..</span></code></pre>
+                <span class="text-primary">DECODED: HELLO WORLD I AM DFACE</span></code></pre>
+                </div>
+
+                    <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+            <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                Conclusion
+            </h2>
+                    <div class="prose prose-invert prose-p:text-gray-400 prose-p:leading-relaxed">
+                        <p>
+                            Lume-M proves that high-speed flickering isn't the only way to communicate through light. By embracing the constraints of modern video compression rather than fighting them, we can turn any "smart" environment into a persistent data source. This project moves us away from obvious, glitchy signals and toward a future where our devices can speak to us through the very atmosphere they create—all while staying hidden in plain sight.
+                        </p>
+                        <br>
+                        <p>
+                            <b>Key Takeaway</b>: Optical communication is not always about speed—it's about survivability. By architecting the signal to mimic the "content" that video encoders want to keep as hidden while willing to share to the actual audiance, we can turn a simple LED into a persistent.
+                    </div>
+                </section>
+            
+                <div class="w-full h-px bg-white/10 my-8"></div>
+        <div class="grid grid-cols-2 gap-4">
+
+                <!-- Image 1 -->
+            <button onclick="openImage('p2.png')"
+                class="group relative h-48 bg-panel rounded-lg border border-white/5 overflow-hidden">
+                <img src="p2.png"
+                class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                alt="Project image 1">
+            </button>
+
+                <!-- Image 2 -->
+            <button onclick="openImage('p3.png')"
+                class="group relative h-48 bg-panel rounded-lg border border-white/5 overflow-hidden">
+                <img src="p3.png"
+                class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                alt="Project image 2">
+            </button>
+
+        </div>
+
+                <!-- Image Modal -->
+        <div id="imageModal"
+                class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+
+                <!-- Close button -->
+            <button onclick="closeImage()"
+                class="absolute top-6 right-6 p-2 rounded-lg
+                 bg-panel border border-white/10
+                 hover:border-primary transition-colors
+                 group">
+                <i data-lucide="x"
+                    class="w-5 h-5 text-primary group-hover:rotate-90 transition-transform duration-300">
+                </i>
+            </button>
+
+                <!-- Expanded Image -->
+            <img id="modalImage"
+                class="max-w-[90vw] max-h-[90vh]
+                 rounded-lg
+                border border-white/10
+                shadow-2xl"
+                src=""
+                alt="Expanded view">
+        </div>
+
+
+
+            </div>
+
+            <div class="space-y-8">
+                <div class="bg-panel border border-white/5 rounded-xl p-6">
+                    <h3 class="font-mono text-xs text-primary tracking-widest mb-6">TECH_STACK</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-base border border-white/10 rounded text-xs text-gray-300">C++</span>
+                        <span class="px-3 py-1 bg-base border border-white/10 rounded text-xs text-gray-300">Arduino</span>
+                        <span class="px-3 py-1 bg-base border border-white/10 rounded text-xs text-gray-300">Python</span>
+                        <span class="px-3 py-1 bg-base border border-white/10 rounded text-xs text-gray-300">OpenCV</span>
+                    </div>
+                </div>
+
+                <div class="bg-panel border border-white/5 rounded-xl p-6">
+                    <h3 class="font-mono text-xs text-primary tracking-widest mb-6">METRICS</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-gray-500">Success Rate:</span>
+                            <span class="text-accent font-bold">8/10</span>
+                        </div>
+                        <div class="w-full bg-base h-1 rounded-full overflow-hidden">
+                            <div class="bg-primary h-full w-[100%]"></div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-sm pt-2">
+                            <span class="text-gray-500">Compression Resistance:</span>
+                            <span class="text-accent font-bold">YouTube 144p Pass</span>
+                        </div>
+                        <div class="w-full bg-base h-1 rounded-full overflow-hidden">
+                            <div class="bg-primary h-full w-[80%]"></div>
+                        </div>
+                        <div class="flex justify-between items-center text-sm pt-2">
+                            <span class="text-gray-500">Transmission Speed:</span>
+                            <span class="text-accent font-bold">~20-40 WPM</span>
+                        </div>
+                        <div class="w-full bg-base h-1 rounded-full overflow-hidden">
+                            <div class="bg-primary h-full w-[10%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <div class="mt-20 pt-12 border-t border-white/10">
+            <p class="font-mono text-xs text-gray-500 mb-4 tracking-widest">Project Blog</p>
+            <a href="/blogs/b01/ATtiny-Payload-Core.html" class="group block bg-panel border border-white/5 p-6 rounded-xl hover:border-primary/50 transition-colors">
+                <h3 class="text-xl font-bold mb-2 group-hover:text-accent transition-colors">Lume-M</h3>
+                <p class="text-gray-400 text-sm">A Robust Luma-Modulation Framework for High-Compression Video Channels</p>
+            </a>
+        </div>
+    </main>
+
+    <footer class="border-t border-white/5 py-8 text-center text-gray-500 text-xs font-mono">
+        <p>PROJECT_ID: 010126 // END OF ARTICLE</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Theme Definitions
+        const themes = [
+            { name: 'VIOLET', colors: { '--color-primary': '#7C3AED', '--color-primary-dim': '#2E1065', '--color-accent': '#E9D5FF' } },
+            { name: 'BURGUNDY', colors: { '--color-primary': '#E11D48', '--color-primary-dim': '#6D001A', '--color-accent': '#FFFFFF' } },
+            { name: 'VIBE', colors: { '--color-primary': '#AC58E9', '--color-primary-dim': '#5B21B6', '--color-accent': '#FFFFFF' } },
+            { name: 'BEIGE', colors: { '--color-primary': '#AD7D56', '--color-primary-dim': '#451a03', '--color-accent': '#CDB49E' } }
+        ];
+
+        let currentThemeIndex = 0;
+
+        function loadTheme() {
+            const savedIndex = localStorage.getItem('portfolioThemeIndex');
+            if (savedIndex !== null) {
+                currentThemeIndex = parseInt(savedIndex);
+                applyTheme(themes[currentThemeIndex]);
+            }
+        }
+
+        function applyTheme(theme) {
+            const root = document.documentElement;
+            for (const [property, value] of Object.entries(theme.colors)) {
+                root.style.setProperty(property, value);
+            }
+            const themeNameEl = document.getElementById('theme-name');
+            if(themeNameEl) themeNameEl.innerText = theme.name;
+        }
+
+        function cycleTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            localStorage.setItem('portfolioThemeIndex', currentThemeIndex); // Save to storage
+            applyTheme(themes[currentThemeIndex]);
+            
+            const icon = document.querySelector('#theme-btn i');
+            if(icon) {
+                icon.classList.remove('spin-once');
+                void icon.offsetWidth;
+                icon.classList.add('spin-once');
+            }
+        }
+
+        // Initialize on load
+        loadTheme();
+    </script>
+    <script>
+        function openImage(src) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            img.src = src;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImage() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+            // Close on ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeImage();
+            });
+    </script>
+
+</body>
+</html>
