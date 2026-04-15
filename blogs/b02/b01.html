@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog 002 | Lume-M</title>
+    <script src="/css.js"></script>
+    <style>
+        :root {
+            transition: --color-primary 0.5s ease, --color-primary-dim 0.5s ease, --color-accent 0.5s ease;
+            --bg-base: #0F0F10;       
+            --bg-panel: #18181B;      
+            --color-primary: #7C3AED;      
+            --color-primary-dim: #2E1065;  
+            --color-accent: #E9D5FF;       
+            --text-main: #FFFFFF;
+            --text-muted: #A1A1AA;    
+        }
+        *, *::before, *::after {
+            transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease, fill 0.5s ease;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+        
+        .spin-once { animation: spin 0.5s ease-in-out; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: 'var(--bg-base)',
+                        panel: 'var(--bg-panel)',
+                        primary: 'var(--color-primary)',     
+                        primaryDim: 'var(--color-primary-dim)',
+                        accent: 'var(--color-accent)',     
+                    },
+                    fontFamily: { mono: ['Courier New', 'monospace'], sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <script src="/icon.js"></script>
+</head>
+<body class="bg-base text-white min-h-screen font-sans selection:bg-primary selection:text-white">
+
+    <div class="fixed top-0 left-0 w-full h-[70vh] bg-primary opacity-[0.05] blur-[150px] pointer-events-none"></div>
+
+    <header class="fixed top-0 left-0 right-0 z-40 bg-base/90 backdrop-blur-md border-b border-white/5 h-16 md:h-20 flex items-center">
+        <div class="max-w-4xl mx-auto w-full px-4 md:px-8 flex items-center justify-between">
+            <a href="/web/index.html" class="flex items-center gap-2 group text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                <span class="font-mono text-xs tracking-widest">CLOSE_BLOG</span>
+            </a>
+
+            <div class="flex items-center gap-4">
+                <button onclick="cycleTheme()" id="theme-btn" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-panel border border-white/10 hover:border-primary/50 text-accent transition-all group">
+                    <i data-lucide="palette" class="w-4 h-4 group-hover:rotate-12 transition-transform"></i>
+                    <span id="theme-name" class="hidden md:block font-mono text-[10px] tracking-widest uppercase">THEME</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 pt-32 pb-24">
+        
+        <div class="mb-12 border-l-4 border-primary pl-6">
+            <div class="flex items-center gap-3 text-primary mb-2 font-mono text-xs tracking-widest">
+                <span>Blog: 02</span>
+                <span>//</span>
+                <span>Lume-M</span>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black leading-tight mb-4">Lume-M : A Robust Luma-Modulation Framework for High-Compression Video Channels</h1>
+            <div class="flex items-center gap-6 text-sm text-gray-500 font-mono">
+                <span class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4"></i> 20 MIN READ</span>
+                <span class="flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4"></i> 25-02-2026</span>
+            </div>
+        </div>
+
+        <div class="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-a:no-underline hover:prose-a:text-accent prose-code:text-accent prose-code:bg-primaryDim/30 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:before:content-none prose-code:after:content-none">
+            <p class="lead text-xl text-gray-300">
+                This project explores a steganographic approach to data transmission using ambient light. Lume-M is different from Li-Fi and high-frequency optical methods because it doesn't need special high-speed sensors to "record and decode." I made in that that way so the data can't be lost by modern video platforms (WhatsApp, YouTube, etc.) by changing the light at a slow, human-perceptible rate.
+            </p>
+            <br />
+            <p>
+                Rather than aiming for reliability or completeness, the experiment was designed to observe failure modes, unexpected behavior, and trade-offs that emerge when theoretical examples are applied to real, resource-limited devices.
+                Instead of aiming for high-speed data transfer, the experiment was designed to use another approach with some development to hide the data while maintaining the stability and survivability of the hidden data. When tested in a real-world situation with little to no environmental control, to know how we can transmit data.
+            </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-code" class="text-primary"></i> Why I Built This
+                    </h2>
+
+                    <p>I built this experiment to move beyond simplified examples commonly found online and test what actually breaks when constraints are real. Many demonstrations assume ideal conditions, fully transparent, and never tried to hide data in visible source.
+                        <br /><br />
+                        I wanted to understand how we can transform those demonstrations — specifically where Morse code is visible to all users into a manner so that it looks like an innocent ambient light but actually transfers data.
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-x-corner" class="text-primary"></i> Constraints & Assumptions
+                    </h2>
+                    <p>1. No physical or wireless sync exists between the transmitter (LED) and the receiver (Camera). <br /><br />
+
+                        2. Designed for standard smartphone cameras and variable frame rates (VFR).<br /><br />
+
+                        3. The transmission must survive "Aggressive Transcoding" (WhatsApp compression or YouTube downscaling).<br /><br />
+
+                        4. The environment is assumed to have non-static lighting (reflections, screen glare) which the decoder must filter out.<br /><br />
+
+                        5. The output must mimic usual Smart Home or ambient patterns to avoid human suspicion.
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-cog" class="text-primary"></i> High-Level Approach
+                    </h2>
+                    <p>This experiment was done to examine how we may use our daily life's light item into a morse transmitor utilizing basic and affordable microcontroller like ESP. Now, with ESP and any object with controlled light brightness/source, you can transport data from ambient light to room lighting or even table lamps without raising any human suspicion.
+                            <br /><br />
+                        The approach was changed multiple times to reduce errors and simplify logic, allowing the data encoding and decoding more accurate finally selecting the <b>Closed-Loop-style State Machine</b> for best result so far. Still place for development.
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-exclamation-point" class="text-primary"></i> What Broke / Didn’t Work
+                    </h2>
+                    <p>To complete this experiment, I tested various approaches, in both encoding in different streams and in different methods like Manchester encoding. What started with curiosity and dot dash later transformed into color-based morse, frequency-based morse, temperature-based morse, and finally ended up with time-based approach with grayscale.
+                        <br /><br />
+                        This exposed a gap between examples that appear simple on paper and are very inaccurate in real life conditions and if we have even more specific requirements, so it all returns to the foundational approach.
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-pen-line" class="text-primary"></i> Adjustments & Decisions
+                    </h2>
+                    <p>After repeated inaccurate results, I shifted focus away from new and creative ideas to more simpler and effective way, using time-based morse encoding. This mimics standard mood lighting, making the data transmission look like a natural decorative effect.
+                        <br /><br />
+                        To prevent "bit-slip" (where one missed pulse ruins the whole message), the decoder analyzes the frame-gap between pulses to identify letter boundaries and word spaces:
+                        <p><br />
+                        1. Gap > 25 frames: End of Letter.
+                        <br /><br />
+                        2. Gap > 50 frames: End of Word.
+                        </p> 
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-white mb-6">
+                        <i data-lucide="file-user" class="text-primary"></i> Key Takeaways
+                    </h2>
+                    <p>This project helped me to understand that some time instead of finding creative ways to solve a problem we can use and improve what we already have. Traditional approaches are robust and traditional for these reasons.
+                        <br /><br />
+                        Instead to trying to find a new method just use the existing with some major upgrades then it can replace the new <b>!</b>founded approach.
+                    </p>
+                <br><div class="w-full h-px bg-white/10 my-8"></div><br>
+            <div class="bg-panel border border-white/10 rounded-xl p-6 my-8 font-mono text-sm overflow-x-auto shadow-2xl">
+                <div class="flex gap-2 mb-4 border-b border-white/5 pb-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                </div>
+                <pre><code class="language-javascript"><span class="text-gray-500">// Personal Note</span>
+                <span class="text-primary"> → </span> <span class="text-accent">It's not bad to sometimes use what is left behind.<span class="text-primary"> — </span></span>
+                <span class="text-accent">Because maybe it can make the work out more efficient and easily.</span>
+            </code></pre>
+            </div>
+        </div>
+
+        <div class="mt-20 pt-12 border-t border-white/10">
+            <p class="font-mono text-xs text-gray-500 mb-4 tracking-widest">Project Article</p>
+            <a href="/web/articles/p02/Lume-M.html" class="group block bg-panel border border-white/5 p-6 rounded-xl hover:border-primary/50 transition-colors">
+                <h3 class="text-xl font-bold mb-2 group-hover:text-accent transition-colors">Lume-M</h3>
+                <p class="text-gray-400 text-sm">Lume-M : A Robust Luma-Modulation Framework for High-Compression Video Channels</p>
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-white/5 py-8 text-center text-gray-500 text-xs font-mono">
+        <p>LOG_ID: 010226 // END OF BLOG</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Theme Definitions
+        const themes = [
+            { name: 'VIOLET', colors: { '--color-primary': '#7C3AED', '--color-primary-dim': '#2E1065', '--color-accent': '#E9D5FF' } },
+            { name: 'BURGUNDY', colors: { '--color-primary': '#E11D48', '--color-primary-dim': '#6D001A', '--color-accent': '#FFFFFF' } },
+            { name: 'VIBE', colors: { '--color-primary': '#AC58E9', '--color-primary-dim': '#5B21B6', '--color-accent': '#FFFFFF' } },
+            { name: 'BEIGE', colors: { '--color-primary': '#AD7D56', '--color-primary-dim': '#451a03', '--color-accent': '#CDB49E' } }
+        ];
+
+        let currentThemeIndex = 0;
+
+        function loadTheme() {
+            const savedIndex = localStorage.getItem('portfolioThemeIndex');
+            if (savedIndex !== null) {
+                currentThemeIndex = parseInt(savedIndex);
+                applyTheme(themes[currentThemeIndex]);
+            }
+        }
+
+        function applyTheme(theme) {
+            const root = document.documentElement;
+            for (const [property, value] of Object.entries(theme.colors)) {
+                root.style.setProperty(property, value);
+            }
+            const themeNameEl = document.getElementById('theme-name');
+            if(themeNameEl) themeNameEl.innerText = theme.name;
+        }
+
+        function cycleTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            localStorage.setItem('portfolioThemeIndex', currentThemeIndex); // Save to storage
+            applyTheme(themes[currentThemeIndex]);
+            
+            const icon = document.querySelector('#theme-btn i');
+            if(icon) {
+                icon.classList.remove('spin-once');
+                void icon.offsetWidth;
+                icon.classList.add('spin-once');
+            }
+        }
+
+        // Initialize on load
+        loadTheme();
+    </script>
+</body>
+</html>
